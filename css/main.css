@@ -1,0 +1,28 @@
+body {
+  background-color: #f2f2f2;
+  font-family: "Trebuchet MS", Helvetica, sans-serif;
+}
+.header h1 {
+/*  margin-left: 5%;*/
+}
+
+.nav-menu {
+  height: 1.8em;
+  font-size: 1.5em;
+  border-top: 3px solid black;
+  border-bottom: 3px solid black;
+}
+.nav-menu ul li{
+  float: left;
+  margin-right: 30px;
+}
+.nav-menu ul {
+/*  margin-left: 10%;*/
+  list-style-type: none;
+  height: 1em;
+}
+
+.jrlogo {
+    width: 80px;
+    height: 80px;
+}

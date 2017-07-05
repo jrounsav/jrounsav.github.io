@@ -6,11 +6,11 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Jared Rounsavall</title>
-  <meta name="description" content="Sharing experience &amp; listening to criticism">
+  <title>AWS CodePipeline/Build from Github, to Github, with Love</title>
+  <meta name="description" content="Earlier this month I had the pleasure of setting up an automated build via AWS CodePipeline to take the contents of one Github repo’s branch and build it to ...">
 
   <link rel="stylesheet" href="/assets/main.css">
-  <link rel="canonical" href="http:/jaredrounsavall.com/">
+  <link rel="canonical" href="http:/jaredrounsavall.com/use-case/2017/07/03/aws-codepipeline-github.html">
   <link rel="alternate" type="application/rss+xml" title="Jared Rounsavall" href="/feed.xml">
   
   
@@ -90,38 +90,61 @@
 
     <main class="page-content" aria-label="Content">
       <div class="wrapper">
-        <div class="home">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
 
-  <h1 class="page-heading">Posts</h1>
-  
-  
-
-
-  <ul class="post-list">
-    
-      <li>
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">AWS CodePipeline/Build from Github, to Github, with Love</h1>
+    <p class="post-meta">
+      <time datetime="2017-07-03T19:43:03-07:00" itemprop="datePublished">
         
-        <span class="post-meta">Jul 3, 2017</span>
+        Jul 3, 2017
+      </time>
+      </p>
+  </header>
 
-        <h2>
-          <a class="post-link" href="/use-case/2017/07/03/aws-codepipeline-github.html">AWS CodePipeline/Build from Github, to Github, with Love</a>
-        </h2>
-      </li>
-    
-      <li>
-        
-        <span class="post-meta">Jun 2, 2017</span>
+  <div class="post-content" itemprop="articleBody">
+    <p>Earlier this month I had the pleasure of setting up an automated build via AWS CodePipeline to take the contents of one Github repo’s branch and build it to another.</p>
 
-        <h2>
-          <a class="post-link" href="/jekyll/update/2017/06/02/welcome-to-jekyll.html">Under Construction!</a>
-        </h2>
-      </li>
-    
-  </ul>
+<p>Now, you might ask:</p>
+<blockquote>
+  <p>Jared, why on earth would you ever want to use CodePipeline to be so redundant?</p>
+</blockquote>
 
-  <p class="rss-subscribe">subscribe <a href="/feed.xml">via RSS</a></p>
+<p>Well, I’ll tell you.</p>
 
-</div>
+<h2 id="use-case-a-neat-host">Use Case: A Neat Host</h2>
+<p>My current employer uses a platform called Pantheon for our web hosting. It’s a great service that offers just about everything you need in a development workflow. Essentialy it tries to simplify environment management by automatically providing version control, dev-&gt;test-&gt;live workflows, DB backups, etc..</p>
+
+<p>One of their Enterprise features alows you to set a Git upstream for use by all of the sites in your organization. That is to say that you could, for example, put together a repo on Github that contains a version of Drupal core along with any custom distributions that you may want to deploy across all of your organization’s sites! <em>Obviously, with a few hundred websites and the need to apply a standard of design and functionality across all of them, that’s exactly what we did.</em></p>
+
+<h1 id="enter-git-submodules">Enter Git Submodules.</h1>
+
+<p>For those of you who don’t know, submodules are <del>God’s gift to man</del> a method by which a developer can reference other Github repositories from inside their own repository. Extremely useful when you want to build a fully-functioning upstream for your organization’s host ;)</p>
+
+<p>Well..</p>
+
+<p>At the time of this writing, Pantheon’s “upstream” feature does not allow for the use of submodules in the upstream. Wait a minute, if your organization has to build a custom Drupal upstream that sources code from 5 different repositories what are your options?</p>
+
+<ol>
+  <li>Brute force - Ignore submdules and manually add updated code from each repo to the new upstream whenever one of the several repositories are changed. Too cumbersome for me, especially when two of the source repos aren’t managed by my group!</li>
+  <li>Script it - Make a build script that replaces the submodules with a “flat” repo that sources the external code. This is better, but it still requires a manual step that goes beyond Git use. Adding more manual steps can be troublesome if you have people on your team that are averse to change!</li>
+  <li>Automate - Use a service to trigger the script from #2 and push the result to your upstream! <strong>Bingo</strong></li>
+</ol>
+
+<p>Now that you understand the use case here’s some primer for my solution!</p>
+
+<h2 id="automating-with-amazon-web-services--co">Automating with Amazon Web Services &amp; co.</h2>
+<p>AWS is another <del>God’s gift to man</del> one of those things that developers in the web-space should venture to grasp. They’ve got a host of services that can be used to solve most of your problem with a little know-how.</p>
+
+<p>Over the next few posts we’ll be using AWS CodePipeline, CodeBuild, IAM, Lambda, &amp; EC2 Parameter Store to trigger a build on commit to a repo hosted on Github. The build will initialize all of the Git submodules(public &amp; private), flatten the submodules to a single repository, and push everything to a master branch in the same repository for us to set as an upstream in our Pantheon organization.</p>
+
+<p>Stay tuned!</p>
+
+
+  </div>
+
+  
+</article>
 
       </div>
     </main>

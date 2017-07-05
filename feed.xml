@@ -1,2 +1,37 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.4.3">Jekyll</generator><link href="http:/jaredrounsavall.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http:/jaredrounsavall.com/" rel="alternate" type="text/html" /><updated>2017-06-09T21:00:54-07:00</updated><id>http:/jaredrounsavall.com/</id><title type="html">Jared Rounsavall</title><subtitle>Sharing experience &amp; listening to criticism
-</subtitle><entry><title type="html">Under Construction!</title><link href="http:/jaredrounsavall.com/jekyll/update/2017/06/02/welcome-to-jekyll.html" rel="alternate" type="text/html" title="Under Construction!" /><published>2017-06-02T19:43:10-07:00</published><updated>2017-06-02T19:43:10-07:00</updated><id>http:/jaredrounsavall.com/jekyll/update/2017/06/02/welcome-to-jekyll</id><content type="html" xml:base="http:/jaredrounsavall.com/jekyll/update/2017/06/02/welcome-to-jekyll.html">&lt;p&gt;This site is under construction&lt;/p&gt;</content><author><name></name></author><summary type="html">This site is under construction</summary></entry></feed>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.4.3">Jekyll</generator><link href="http:/jaredrounsavall.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http:/jaredrounsavall.com/" rel="alternate" type="text/html" /><updated>2017-07-04T19:19:43-07:00</updated><id>http:/jaredrounsavall.com/</id><title type="html">Jared Rounsavall</title><subtitle>Sharing experience &amp; listening to criticism
+</subtitle><entry><title type="html">AWS CodePipeline/Build from Github, to Github, with Love</title><link href="http:/jaredrounsavall.com/use-case/2017/07/03/aws-codepipeline-github.html" rel="alternate" type="text/html" title="AWS CodePipeline/Build from Github, to Github, with Love" /><published>2017-07-03T19:43:03-07:00</published><updated>2017-07-03T19:43:03-07:00</updated><id>http:/jaredrounsavall.com/use-case/2017/07/03/aws-codepipeline-github</id><content type="html" xml:base="http:/jaredrounsavall.com/use-case/2017/07/03/aws-codepipeline-github.html">&lt;p&gt;Earlier this month I had the pleasure of setting up an automated build via AWS CodePipeline to take the contents of one Github repo’s branch and build it to another.&lt;/p&gt;
+
+&lt;p&gt;Now, you might ask:&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;Jared, why on earth would you ever want to use CodePipeline to be so redundant?&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Well, I’ll tell you.&lt;/p&gt;
+
+&lt;h2 id=&quot;use-case-a-neat-host&quot;&gt;Use Case: A Neat Host&lt;/h2&gt;
+&lt;p&gt;My current employer uses a platform called Pantheon for our web hosting. It’s a great service that offers just about everything you need in a development workflow. Essentialy it tries to simplify environment management by automatically providing version control, dev-&amp;gt;test-&amp;gt;live workflows, DB backups, etc..&lt;/p&gt;
+
+&lt;p&gt;One of their Enterprise features alows you to set a Git upstream for use by all of the sites in your organization. That is to say that you could, for example, put together a repo on Github that contains a version of Drupal core along with any custom distributions that you may want to deploy across all of your organization’s sites! &lt;em&gt;Obviously, with a few hundred websites and the need to apply a standard of design and functionality across all of them, that’s exactly what we did.&lt;/em&gt;&lt;/p&gt;
+
+&lt;h1 id=&quot;enter-git-submodules&quot;&gt;Enter Git Submodules.&lt;/h1&gt;
+
+&lt;p&gt;For those of you who don’t know, submodules are &lt;del&gt;God’s gift to man&lt;/del&gt; a method by which a developer can reference other Github repositories from inside their own repository. Extremely useful when you want to build a fully-functioning upstream for your organization’s host ;)&lt;/p&gt;
+
+&lt;p&gt;Well..&lt;/p&gt;
+
+&lt;p&gt;At the time of this writing, Pantheon’s “upstream” feature does not allow for the use of submodules in the upstream. Wait a minute, if your organization has to build a custom Drupal upstream that sources code from 5 different repositories what are your options?&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Brute force - Ignore submdules and manually add updated code from each repo to the new upstream whenever one of the several repositories are changed. Too cumbersome for me, especially when two of the source repos aren’t managed by my group!&lt;/li&gt;
+  &lt;li&gt;Script it - Make a build script that replaces the submodules with a “flat” repo that sources the external code. This is better, but it still requires a manual step that goes beyond Git use. Adding more manual steps can be troublesome if you have people on your team that are averse to change!&lt;/li&gt;
+  &lt;li&gt;Automate - Use a service to trigger the script from #2 and push the result to your upstream! &lt;strong&gt;Bingo&lt;/strong&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Now that you understand the use case here’s some primer for my solution!&lt;/p&gt;
+
+&lt;h2 id=&quot;automating-with-amazon-web-services--co&quot;&gt;Automating with Amazon Web Services &amp;amp; co.&lt;/h2&gt;
+&lt;p&gt;AWS is another &lt;del&gt;God’s gift to man&lt;/del&gt; one of those things that developers in the web-space should venture to grasp. They’ve got a host of services that can be used to solve most of your problem with a little know-how.&lt;/p&gt;
+
+&lt;p&gt;Over the next few posts we’ll be using AWS CodePipeline, CodeBuild, IAM, Lambda, &amp;amp; EC2 Parameter Store to trigger a build on commit to a repo hosted on Github. The build will initialize all of the Git submodules(public &amp;amp; private), flatten the submodules to a single repository, and push everything to a master branch in the same repository for us to set as an upstream in our Pantheon organization.&lt;/p&gt;
+
+&lt;p&gt;Stay tuned!&lt;/p&gt;</content><author><name></name></author><summary type="html">Earlier this month I had the pleasure of setting up an automated build via AWS CodePipeline to take the contents of one Github repo’s branch and build it to another.</summary></entry><entry><title type="html">Under Construction!</title><link href="http:/jaredrounsavall.com/jekyll/update/2017/06/02/welcome-to-jekyll.html" rel="alternate" type="text/html" title="Under Construction!" /><published>2017-06-02T19:43:10-07:00</published><updated>2017-06-02T19:43:10-07:00</updated><id>http:/jaredrounsavall.com/jekyll/update/2017/06/02/welcome-to-jekyll</id><content type="html" xml:base="http:/jaredrounsavall.com/jekyll/update/2017/06/02/welcome-to-jekyll.html">&lt;p&gt;This site is under construction&lt;/p&gt;</content><author><name></name></author><summary type="html">This site is under construction</summary></entry></feed>

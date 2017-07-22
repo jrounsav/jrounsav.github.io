@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Configuring AWS Codebuild for Github to Github Jobs</title>
+  <meta name="description" content="In our last chat we discovered a use-case for the development of a build process that will strip submodules out from one Github branch and post the resulting...">
+
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="http://localhost:4000/aws/2017/07/20/codebuild-for-g2g-jobs.html">
+  <link rel="alternate" type="application/rss+xml" title="Jared Rounsavall" href="/feed.xml">
+  
+  
+</head>
+
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-26105277-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+  
+
+  <body>
+
+    <header class="site-header" role="banner">
+
+  <div class="wrapper">
+    
+    
+    <a class="site-title" href="/">Jared Rounsavall</a>
+  
+    
+      <nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger">
+          
+            
+            
+            <a class="page-link" href="/about/">About</a>
+            
+          
+            
+            
+            <a class="page-link" href="/cv/">CV</a>
+            
+          
+            
+            
+            <a class="page-link" href="/experience/">Experience</a>
+            
+          
+            
+            
+          
+            
+            
+            <a class="page-link" href="/rwd/">RWD LLC</a>
+            
+          
+            
+            
+          
+            
+            
+          
+        </div>
+      </nav>
+    
+  </div>
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Configuring AWS Codebuild for Github to Github Jobs</h1>
+    <p class="post-meta">
+      <time datetime="2017-07-20T19:43:03-07:00" itemprop="datePublished">
+        
+        Jul 20, 2017
+      </time>
+      </p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>In our last chat we discovered a use-case for the development of a build process that will strip submodules out from one Github branch and post the resulting code to another, because our host can’t handle <del>the truth</del> submodules in it’s workflow.</p>
+
+<p>If you haven’t guessed by the title of this article, today we’ll be walking through the configuration necessary to put CodeBuild in a place to handle Github to Github “deployments”.</p>
+
+<p>I’m assuming the following:</p>
+
+<ul>
+  <li>You have <strong>admin</strong> access to an AWS Dashboard</li>
+  <li>Region is set to US West (Oregon) region</li>
+  <li>You own a Github Organization, or know someone who does.</li>
+  <li>On the Github Organization, you already have a Github repo with two branches. One that contains submodules, and another that will contain the “flattened” code</li>
+</ul>
+
+<h2 id="codebuild-baby-steps">CodeBuild, baby steps</h2>
+
+<p>For those unfamiliar with AWS and its many available services, here’s a bit from the official AWS docs on CodeBuild:</p>
+
+<blockquote>
+  <p>AWS CodeBuild is a fully managed build service that compiles your source code, runs unit tests, and produces artifacts that are ready to deploy.</p>
+</blockquote>
+
+<p>Sounds pretty great, right? Well it is.</p>
+
+<p>Leveraging Docker and a YAML file (buildspec.yml), it generates an environment where we can run all sorts of scripts &amp; build tools to work with our code. you can think of it like your own build VM.</p>
+
+<p>For the purposes of this series we’ll slim down our approach, avoiding deployments, unit tests, and compiling. Instead we’ll focus on defining the necessary job within CodeBuild so that it can see the target repository and be in a place to execute steps that we’ll define later.</p>
+
+<h3 id="getting-started">Getting Started</h3>
+
+<ol>
+  <li>
+    <p>Let’s begin by visiting our AWS Dashboard and selecting the “Services” link in the top left corner of the screen. 
+<em>Doing so should open up a screen that looks something like this:</em>
+<img src="/assets/services-tab.png" alt="services-tab" class="img-responsive" /></p>
+  </li>
+  <li>
+    <p>Under Developer Tools select CodeBuild, or type CodeBuild into the search box and click the corresponding link.
+<em>You should see the CodeBuild dashboard and be on the “Build projects” page.</em></p>
+  </li>
+  <li>
+    <p>Select the “Create project” button.</p>
+  </li>
+</ol>
+
+<h3 id="configuring-the-project">Configuring the project</h3>
+
+<p>Now we’re greeted with a form where we’ll define the build at a high level. Project name, code source, the build environment, etc. Let’s tackle each of these one-by-one and explain their significance.</p>
+
+<p><img src="/assets/project-configuration.png" alt="services-tab" class="img-responsive" /></p>
+
+<p><strong>Project name</strong> - This is the name of your Build project, and will show up on the CodeBuild dashboard. It must contain between 2 &amp; 255 characters with letters &amp; numbers. No spaces! We are instead limited to “-“ and “_”.</p>
+
+<p>Let’s name it something pertinent and skip the description for now.</p>
+
+<p><img src="/assets/project-name.png" alt="services-tab" class="img-responsive" /></p>
+
+<p>There we go! “rwdllc” is an abbreviation for my business, “g2g” for “Git to Git”, and “build” because that’s what we’re working on.</p>
+
+<p><strong>Source provider</strong> - This is where we define where our codebase lives. On Amazon S3, CodeCommit, or Github.</p>
+
+<p>Of course we’ll select “Github”, but notice that selecting the option expands the menu with “Repository” and “Repository URL”</p>
+
+<p><img src="/assets/expanded-source-form.png" alt="services-tab" class="img-responsive" /></p>
+
+<p>Select “Use repository in my account” and follow the steps to give AWS access to your Public &amp; Private repos.</p>
+
+<p>After that you should be able to select any repository that your account has access to. This includes repositories that may belong to an organization your account is under.</p>
+
+<p>-
+<strong>Note</strong>: if your organization’s repos are not showing up then you likely need to grant the OAuth application access to your org.</p>
+
+<ul>
+  <li>On Github, go to your profile and select “Settings”</li>
+  <li>Visit “Authorized OAuth Apps”</li>
+  <li>Click on the name of the OAuth application. In my case it was <strong>AWS CodeBuild US-WEST-2</strong></li>
+  <li>Under “Organization Access” Click “Grant” next to the desired organization</li>
+</ul>
+
+<p>-</p>
+
+<p><strong>Environment: How to build</strong> - Now we can tell AWS what sort of environment we’d like to build our project in by selecting a Docker image.</p>
+
+<p>“Environment Image” essentially lets you choose where you’ll source the Docker image from. That is to say that you can decide whether to use one provided by Amazon, or link to one you maintain on Amazon ECR or the Docker Cloud. We’ll select the following:</p>
+
+<ul>
+  <li>Use an image managed by AWS CodeBuild</li>
+  <li>Operating System - Ubuntu</li>
+  <li>Runtime - Base</li>
+  <li>Version - aws/codebuild/ubuntu-base:14.04</li>
+  <li>Build Specification - Use the buildspec.yml in the source code root directory</li>
+</ul>
+
+<p>More on the selections to follow, but for now your selections should look like this:</p>
+
+<p><img src="/assets/environment-configuration.png" alt="services-tab" class="img-responsive" /></p>
+
+<p>So, <em>what have we done?</em></p>
+
+<p>During the build, AWS is going to automatically spin up a basic Ubuntu environment defined by the Dockerfile here: https://github.com/aws/aws-codebuild-docker-images/tree/master/ubuntu/ubuntu-base/14.04</p>
+
+<p>We have also specified that process should use a YAML file in the root of our Github repo as a source for the build steps. Sit tight, we’ll define the contents of our <strong>buildspec.yml</strong> file in another post!</p>
+
+<p><strong>Artifacts: Where to put the artifacts from this build project</strong> - This is where we’d specify a location to store the files that result from the build process.</p>
+
+<p>Yes I’m well aware that our use-case doesn’t require any build artifacts, however at the time of this writing CodePipeline requires that we either have an artifact destination configured here or use CodeDeploy to deploy the resulting files. Since we are using CodePipeline to automate in a future post it’s a good idea to set this up now so that we don’t need to return.</p>
+
+<p>Select “Amazon S3”, give the artifact folder a meaningful name, and select an S3 bucket to hold the result.</p>
+
+<p>If you don’t have an S3 bucket available, please follow these steps to quickly create a dumping ground: http://docs.aws.amazon.com/AmazonS3/latest/gsg/CreatingABucket.html</p>
+
+<p><strong>Service role</strong> - As the tooltip states,</p>
+
+<blockquote>
+  <p>“Specify a service role that enables AWS CodeBuild to call dependent AWS services on your behalf”</p>
+</blockquote>
+
+<p>For the purposes of this demo, we’ll stick with the default selection and let CodeBuild make a new role for us.</p>
+
+<p><img src="/assets/service-role.png" alt="services-tab" class="img-responsive" /></p>
+
+<p>Ignore the advanced settings and proceed by selecting “Continue”, which will move you forward to the “Review” Step.</p>
+
+<p>Hit “Save” and bask in the glory that is your new build job.</p>
+
+<p><img src="/assets/saved-build.png" alt="services-tab" class="img-responsive" /></p>
+
+<h2 id="are-we-done-yet">Are we done yet?</h2>
+
+<p>No.</p>
+
+<p>You may notice that we haven’t actually done anything that has to do with the setup of an actual build PROCESS however we are now in a place where CodeBuild can see, and we can define a process in, our aforementioned buildspec.yml file.</p>
+
+<p>If you previously selected “Save and Build” then you may have noticed an error because we haven’t defined the buildspec file yet. Don’t panic! That’s the next topic we’ll cover, along with setting up EC2 parameter store.</p>
+
+<p>Stay tuned!</p>
+
+  </div>
+
+  
+</article>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Jared Rounsavall</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+            <li>
+            
+              Jared Rounsavall
+            
+            </li>
+            
+            <li><a href="mailto:jrounsav@asu.edu">jrounsav@asu.edu</a></li>
+            
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+          <li>
+            <a href="https://github.com/jrounsav"><span class="icon icon--github"><svg viewBox="0 0 16 16" width="16px" height="16px"><path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/></svg>
+</span><span class="username">jrounsav</span></a>
+
+          </li>
+          
+
+          
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-3">
+        <p>Sharing experience &amp; listening to criticism
+</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+  </body>
+
+</html>

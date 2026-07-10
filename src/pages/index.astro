@@ -1,0 +1,548 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const posts = await getCollection('blog');
+const featuredPosts = posts
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 2);
+
+const skills = [
+  { category: "Languages", items: ["JavaScript", "TypeScript", "Java", "Kotlin", "Python"] },
+  { category: "Web & Mobile", items: ["React", "React Native", "Next.js", "NestJS", "NodeJS", "GraphQL", "Android", "iOS"] },
+  { category: "Cloud & Infrastructure", items: ["AWS", "GCP", "Azure", "Kubernetes", "Argo CI/CD", "Linux"] },
+  { category: "Data & Messaging", items: ["SQL", "NoSQL", "Kafka", "RabbitMQ", "Postgres", "Redis"] }
+];
+---
+
+<BaseLayout title="Jared Rounsavall | CV & Personal Thoughts">
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-content">
+      <span class="badge">Available for Freelance & Projects</span>
+      <h1 class="hero-title">Building high-performance, beautiful web & mobile experiences.</h1>
+      <p class="hero-subtitle">
+        I am a Senior Software Engineer, Tech Lead, and Freelance Developer focused on crafting clean, scalable web and mobile applications, optimizing infrastructure, and leading cross-functional teams.
+      </p>
+      <div class="hero-actions">
+        <a href="#cv" class="btn btn-primary">View my CV</a>
+        <!-- <a href="/blog" class="btn btn-secondary">Read my Thoughts</a> -->
+      </div>
+    </div>
+  </section>
+
+  <!-- CV Section -->
+  <section id="cv" class="cv-section">
+    <h2 class="section-title">Curriculum Vitae</h2>
+    
+    <div class="cv-grid">
+      <!-- Left Column: Experience -->
+      <div class="cv-main">
+        <h3 class="cv-subsection-title">Experience</h3>
+        
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-marker"></div>
+            <div class="timeline-content">
+              <div class="timeline-header">
+                <h4>Owner</h4>
+                <span class="timeline-date">August 2011 - Present</span>
+              </div>
+              <p class="company">Rounsavall Web Development, LLC (Freelance)</p>
+              <ul class="cv-bullet-list">
+                <li>General web development, SEO & consultation.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="timeline-marker"></div>
+            <div class="timeline-content">
+              <div class="timeline-header">
+                <h4>Senior Software Engineer, Tech Lead</h4>
+                <span class="timeline-date">Sept 2023 - Mar 2026</span>
+              </div>
+              <p class="company">Endpoint</p>
+              <ul class="cv-bullet-list">
+                <li>Unified CI/CD workflows by embedding automated tests and security audits, enhancing deployment speed and system stability while ensuring compliance in a security-sensitive environment.</li>
+                <li>Integrated containerized pre-merge testing into CI/CD flows to catch defects prior to running full E2E test suites, establishing a new company-wide standard for microservice validation.</li>
+                <li>Joined the platform migration team to rapidly transition multiple critical services into First American infrastructure under a tight schedule, successfully unblocking key company pilot programs.</li>
+                <li>Executed a migration to Pydantic v2, realizing a 20x improvement in the speed of API validation and data serialization.</li>
+                <li>Designed a system to process all incoming operational emails, facilitating AI-powered autonomous actions.</li>
+                <li>Led the Zendesk integration project, partnering with support groups to reduce manual data collection by 66%.</li>
+                <li>Utilized LaunchDarkly for feature flagging to support experimentation-driven product developments.</li>
+                <li>Leveraged Amplitude for instrumentation and analytics to drive data-informed technical decisions and monitor meaningful success metrics.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="timeline-marker"></div>
+            <div class="timeline-content">
+              <div class="timeline-header">
+                <h4>Senior Software Engineer, Tech Lead</h4>
+                <span class="timeline-date">May 2022 - June 2023</span>
+              </div>
+              <p class="company">Lessen</p>
+              <ul class="cv-bullet-list">
+                <li>Led development of scalable web and mobile applications to streamline field workflows.</li>
+                <li>Architected and implemented offline data support and synchronization features, enabling field service teams to seamlessly execute operations in areas with no network connectivity.</li>
+                <li>Developed a NestJS microservice to manage complex business processes for field employees.</li>
+                <li>Created a Kafka adapter for real-time data streaming and processing, allowing microservices to leverage broader business events.</li>
+                <li>Improved team delivery pace by mentoring junior developers and optimizing code contribution workflows.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="timeline-marker"></div>
+            <div class="timeline-content">
+              <div class="timeline-header">
+                <h4>Senior Software Engineer, Tech Lead</h4>
+                <span class="timeline-date">Sept 2019 - May 2022</span>
+              </div>
+              <p class="company">Keap</p>
+              <ul class="cv-bullet-list">
+                <li>Architected highly scalable systems for a 2nd phone line and mobile app, contributing to a 20% increase in active users.</li>
+                <li>Engineered a seamless migration from Realm to WatermelonDB for local offline-first storage, achieving a 20x improvement in data handling and query execution speeds.</li>
+                <li>Optimized image assets and local media storage mechanisms on-device, reducing the application install size by 15%.</li>
+                <li>Built a custom A/B testing solution using Amplitude to validate different mobile onboarding UIs on-device, directly influencing product direction based on user data.</li>
+                <li>Developed and maintained multiple ExpressJS microservices to facilitate reliable mobile communications, supporting +500k messages and thousands of call hours.</li>
+                <li>Developed onboarding workflows to meet new government regulatory requirements for virtual phone lines, demonstrating success in compliance-sensitive domains.</li>
+                <li>Collaborated closely with cross-functional teams and 3rd-party stakeholders to integrate various platforms into the company CRM.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="timeline-marker"></div>
+            <div class="timeline-content">
+              <div class="timeline-header">
+                <h4>Systems Analyst & Website Specialist</h4>
+                <span class="timeline-date">August 2014 - September 2019</span>
+              </div>
+              <p class="company">Arizona State University (Higher Education)</p>
+              <ul class="cv-bullet-list">
+                <li>Empowered more than 100k students to manage their University experience from a mobile device.</li>
+                <li>Enabled student navigation across 4 campuses with an in-house mapping and directions application.</li>
+                <li>Simplified campus travel for a fleet of 30 IoT carts with a golf-cart rental application.</li>
+                <li>Demonstrated the power of IoT through live venue experiences in Sun Devil Stadium.</li>
+                <li>Developed a student ticketing platform for ASU 365 events, supplying +100 tickets within the first month.</li>
+                <li>Accelerated application development with a reusable authentication package.</li>
+                <li>Contributed to the creation & management of websites for 15 university colleges with a Drupal distribution.</li>
+                <li>Developed and maintained the standardized global ASU Header, simplifying navigation and login capabilities across dozens of college websites.</li>
+                <li>Improved student acquisition with a "Request for Information" module that could be applied to all college websites.</li>
+                <li>Standardized websites with reusable web components, styling libraries & guides.</li>
+                <li>Optimized analytics via Google Tag manager.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <h3 class="cv-subsection-title">Education</h3>
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-marker"></div>
+            <div class="timeline-content">
+              <div class="timeline-header">
+                <h4>BS Computer Science</h4>
+                <span class="timeline-date">2023</span>
+              </div>
+              <p class="company">Colorado State University Global</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-marker"></div>
+            <div class="timeline-content">
+              <div class="timeline-header">
+                <h4>AAS Web Development</h4>
+                <span class="timeline-date">2014</span>
+              </div>
+              <p class="company">Mesa Community College</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Skills & Info -->
+      <div class="cv-sidebar">
+        <h3 class="cv-subsection-title">Specializations</h3>
+        <div class="skills-container">
+          {skills.map(group => (
+            <div class="skills-group">
+              <h5>{group.category}</h5>
+              <div class="skills-tags">
+                {group.items.map(item => (
+                  <span class="skill-tag">{item}</span>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div class="contact-card card">
+          <h4>Get In Touch</h4>
+          <p>Available for freelance projects, contract roles, or technical consulting. Let's collaborate!</p>
+          <ul class="contact-details">
+            <li>
+              <strong>Location:</strong> Tempe, AZ
+            </li>
+            <li>
+              <strong>LinkedIn:</strong> <a href="https://linkedin.com/in/jared-rounsavall" target="_blank" rel="noopener noreferrer">linkedin.com/in/jared-rounsavall</a>
+            </li>
+            <li>
+              <strong>GitHub:</strong> <a href="https://github.com/jrounsav" target="_blank" rel="noopener noreferrer">github.com/jrounsav</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Thoughts -->
+  <!-- <section class="featured-thoughts">
+    <div class="flex-between" style="margin-bottom: 2rem;">
+      <h2 class="section-title" style="margin-bottom: 0; border-bottom: none; padding-bottom: 0;">Featured Thoughts</h2>
+      <a href="/blog" class="view-all-link">
+        View All
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-left: 4px;"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+      </a>
+    </div>
+
+    <div class="grid-cols-2">
+      {featuredPosts.map(post => (
+        <article class="post-card card">
+          {post.data.banner && (
+            <div class="post-card-banner">
+              <img src={post.data.banner} alt={post.data.title} />
+            </div>
+          )}
+          <div class="post-card-content">
+            <span class="post-card-date">
+              {post.data.pubDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+            </span>
+            <h3 class="post-card-title">
+              <a href={`/blog/${post.id}`}>{post.data.title}</a>
+            </h3>
+            <p class="post-card-description">{post.data.description}</p>
+            <div class="post-card-tags">
+              {post.data.tags.slice(0, 3).map(tag => (
+                <span class="post-tag">#{tag}</span>
+              ))}
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section> -->
+</BaseLayout>
+
+<style>
+  /* Hero styles */
+  .hero-section {
+    padding: 3rem 0;
+    margin-bottom: 4rem;
+  }
+
+  .hero-content {
+    max-width: 800px;
+  }
+
+  .hero-title {
+    font-size: 2.75rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    background: linear-gradient(135deg, var(--text-primary) 30%, var(--accent) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-top: 1rem;
+    margin-bottom: 1.5rem;
+    line-height: 1.15;
+  }
+
+  @media (min-width: 768px) {
+    .hero-title {
+      font-size: 3.5rem;
+    }
+  }
+
+  .hero-subtitle {
+    font-size: 1.25rem;
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+    line-height: 1.6;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  /* CV Section */
+  .cv-section {
+    margin-bottom: 5rem;
+    scroll-margin-top: 2rem;
+  }
+
+  .section-title {
+    margin-bottom: 2.5rem;
+  }
+
+  .cv-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+
+  @media (min-width: 1024px) {
+    .cv-grid {
+      grid-template-columns: 2fr 1fr;
+    }
+  }
+
+  .cv-subsection-title {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    color: var(--text-primary);
+  }
+
+  /* Timeline */
+  .timeline {
+    border-left: 2px solid var(--border);
+    margin-left: 0.5rem;
+    padding-left: 1.5rem;
+    margin-bottom: 3rem;
+  }
+
+  .timeline-item {
+    position: relative;
+    margin-bottom: 2.5rem;
+  }
+
+  .timeline-item:last-child {
+    margin-bottom: 0;
+  }
+
+  .timeline-marker {
+    position: absolute;
+    left: -27px;
+    top: 6px;
+    width: 10px;
+    height: 10px;
+    border-radius: var(--radius-full);
+    background-color: var(--accent);
+    border: 2px solid var(--bg-primary);
+    box-shadow: 0 0 0 4px var(--border);
+    transition: var(--transition-fast);
+  }
+
+  .timeline-item:hover .timeline-marker {
+    background-color: var(--accent-hover);
+    transform: scale(1.2);
+  }
+
+  .timeline-header {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 0.25rem;
+  }
+
+  @media (min-width: 600px) {
+    .timeline-header {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+    }
+  }
+
+  .timeline-header h4 {
+    font-size: 1.15rem;
+    margin-bottom: 0;
+  }
+
+  .timeline-date {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--accent);
+  }
+
+  .company {
+    font-weight: 500;
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.75rem;
+  }
+
+  .description {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+  }
+
+  /* CV Sidebar */
+  .skills-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .skills-group h5 {
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+  }
+
+  .skills-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .skill-tag {
+    font-size: 0.85rem;
+    padding: 0.3rem 0.75rem;
+    background-color: var(--bg-sidebar);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+    font-weight: 500;
+    transition: var(--transition-fast);
+  }
+
+  .skill-tag:hover {
+    border-color: var(--accent);
+    color: var(--text-primary);
+  }
+
+  .contact-card h4 {
+    margin-bottom: 0.75rem;
+  }
+
+  .contact-details {
+    list-style: none;
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+  }
+
+  /* Featured thoughts card styles */
+  .post-card {
+    padding: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .post-card-banner {
+    width: 100%;
+    height: 180px;
+    overflow: hidden;
+  }
+
+  .post-card-banner img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: var(--transition);
+  }
+
+  .post-card:hover .post-card-banner img {
+    transform: scale(1.03);
+  }
+
+  .post-card-content {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+
+  .post-card-date {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+  }
+
+  .post-card-title {
+    font-size: 1.25rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .post-card-title a {
+    color: var(--text-primary);
+  }
+
+  .post-card-title a:hover {
+    color: var(--accent);
+  }
+
+  .post-card-description {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+    flex-grow: 1;
+  }
+
+  .post-card-tags {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .post-tag {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--accent);
+  }
+
+  .cv-bullet-list {
+    list-style-type: disc;
+    padding-left: 1.25rem;
+    margin-top: 0.75rem;
+    margin-bottom: 0.75rem;
+    color: var(--text-secondary);
+  }
+
+  .cv-bullet-list li {
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+    line-height: 1.5;
+  }
+
+  .role-subsection {
+    margin-top: 1.25rem;
+    padding-top: 1.25rem;
+    border-top: 1px dashed var(--border);
+  }
+
+  .role-subsection:first-of-type {
+    border-top: none;
+    padding-top: 0;
+  }
+
+  .role-title-sub {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+    color: var(--text-primary);
+  }
+
+  .tech-stack-tagline {
+    font-size: 0.85rem;
+    font-family: var(--font-mono);
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+  }
+
+  .view-all-link {
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+  }
+</style>

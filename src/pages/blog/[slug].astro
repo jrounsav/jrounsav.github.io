@@ -1,0 +1,148 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map(post => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+
+const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric'
+});
+---
+
+<BaseLayout title={`${post.data.title} | Jared Rounsavall`} description={post.data.description}>
+  <div class="article-container">
+    <!-- Back to Thoughts link -->
+    <a href="/blog" class="back-link">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+      <span>Back to all thoughts</span>
+    </a>
+
+    <article class="blog-post">
+      <!-- Article Header -->
+      <header class="post-header">
+        <div class="post-meta">
+          <time datetime={post.data.pubDate.toISOString()}>{formattedDate}</time>
+          <span class="divider">•</span>
+          <span>5 min read</span>
+        </div>
+        <h1 class="post-title">{post.data.title}</h1>
+        
+        <div class="post-tags">
+          {post.data.tags.map(tag => (
+            <span class="tag-badge">#{tag}</span>
+          ))}
+        </div>
+      </header>
+
+      <!-- Banner Image -->
+      {post.data.banner && (
+        <div class="post-banner">
+          <img src={post.data.banner} alt={post.data.title} />
+        </div>
+      )}
+
+      <!-- Post Body -->
+      <div class="prose">
+        <Content />
+      </div>
+    </article>
+  </div>
+</BaseLayout>
+
+<style>
+  .article-container {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-muted);
+    font-weight: 500;
+    font-size: 0.95rem;
+    margin-bottom: 2.5rem;
+    transition: var(--transition-fast);
+  }
+
+  .back-link:hover {
+    color: var(--accent);
+  }
+
+  /* Header styling */
+  .post-header {
+    margin-bottom: 2rem;
+  }
+
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    font-weight: 500;
+    margin-bottom: 0.75rem;
+  }
+
+  .divider {
+    color: var(--border);
+  }
+
+  .post-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 1.25rem;
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  @media (min-width: 768px) {
+    .post-title {
+      font-size: 3rem;
+    }
+  }
+
+  .post-tags {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .tag-badge {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--accent);
+    background-color: var(--accent-light);
+    padding: 0.2rem 0.6rem;
+    border-radius: var(--radius-sm);
+  }
+
+  /* Banner image */
+  .post-banner {
+    width: 100%;
+    max-height: 400px;
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+    margin-bottom: 3rem;
+    box-shadow: var(--shadow);
+  }
+
+  .post-banner img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+</style>

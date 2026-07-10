@@ -1,0 +1,94 @@
+---
+import Sidebar from '../components/Sidebar.astro';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = "Jared Rounsavall - Portfolio, CV, and Personal Thoughts" } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    
+    <title>{title}</title>
+    <meta name="description" content={description} />
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href={Astro.url.href} />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={Astro.url.href} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={new URL('/images/avatar.jpg', Astro.url).href} />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={Astro.url.href} />
+    <meta property="twitter:title" content={title} />
+    <meta property="twitter:description" content={description} />
+    <meta property="twitter:image" content={new URL('/images/avatar.jpg', Astro.url).href} />
+
+    <!-- Inline script to prevent FOUC on dark mode load -->
+    <script is:inline>
+      const getTheme = () => {
+        if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+          return localStorage.getItem('theme');
+        }
+        if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+          return 'dark';
+        }
+        return 'light';
+      };
+
+      const theme = getTheme();
+      if (theme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      } else {
+        document.documentElement.removeAttribute('data-theme');
+      }
+      window.localStorage.setItem('theme', theme);
+    </script>
+  </head>
+  <body>
+    <div class="app-container">
+      <Sidebar />
+      <main class="main-content">
+        <slot />
+      </main>
+    </div>
+
+    <!-- Client-side logic for Theme Toggler -->
+    <script>
+      const handleToggleClick = () => {
+        const element = document.documentElement;
+        const isDark = element.getAttribute('data-theme') === 'dark';
+        
+        if (isDark) {
+          element.removeAttribute('data-theme');
+          localStorage.setItem('theme', 'light');
+        } else {
+          element.setAttribute('data-theme', 'dark');
+          localStorage.setItem('theme', 'dark');
+        }
+      };
+
+      // Set listener on load
+      document.getElementById('themeToggle')?.addEventListener('click', handleToggleClick);
+
+      // Support view transitions or client-side navigation resets
+      document.addEventListener('astro:after-swap', () => {
+        document.getElementById('themeToggle')?.addEventListener('click', handleToggleClick);
+      });
+    </script>
+  </body>
+</html>

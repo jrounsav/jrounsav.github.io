@@ -1,0 +1,6 @@
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Allow: /
+
+# TODO: Update the domain here if your production site URL changes
+Sitemap: https://jrounsav.github.io/sitemap-index.xml

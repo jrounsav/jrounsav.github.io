@@ -1,0 +1,223 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const posts = await getCollection('blog');
+const sortedPosts = posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+// Get unique tags
+const allTags = [...new Set(posts.flatMap(post => post.data.tags))];
+---
+
+<BaseLayout title="Thoughts | Jared Rounsavall" description="A collection of my thoughts and writings on technology, design, and software engineering.">
+  <div class="blog-header">
+    <h1 class="page-title">Thoughts & Musings</h1>
+    <p class="subtitle">
+      Writing about things I learn, building side projects, and sharing insights on software design.
+    </p>
+  </div>
+
+  <!-- Tag filter helper (UI only for now, can be extended) -->
+  <div class="tags-filter">
+    <span class="filter-label">Filter tags:</span>
+    <div class="tags-list">
+      <a href="/blog" class="tag-chip active">All</a>
+      {allTags.map(tag => (
+        <span class="tag-chip">#{tag}</span>
+      ))}
+    </div>
+  </div>
+
+  <div class="posts-list">
+    {sortedPosts.map(post => (
+      <article class="post-item card">
+        {post.data.banner && (
+          <div class="post-item-banner">
+            <a href={`/blog/${post.id}`}>
+              <img src={post.data.banner} alt={post.data.title} />
+            </a>
+          </div>
+        )}
+        <div class="post-item-details">
+          <div class="post-item-meta">
+            <span class="post-date">
+              {post.data.pubDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+            </span>
+            <span class="divider">•</span>
+            <span class="read-time">5 min read</span>
+          </div>
+          <h2 class="post-title">
+            <a href={`/blog/${post.id}`}>{post.data.title}</a>
+          </h2>
+          <p class="post-description">{post.data.description}</p>
+          <div class="post-tags">
+            {post.data.tags.map(tag => (
+              <span class="tag-badge">#{tag}</span>
+            ))}
+          </div>
+        </div>
+      </article>
+    ))}
+  </div>
+</BaseLayout>
+
+<style>
+  .blog-header {
+    margin-bottom: 3rem;
+  }
+
+  .page-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+  }
+
+  .subtitle {
+    font-size: 1.15rem;
+    color: var(--text-secondary);
+    max-width: 600px;
+  }
+
+  /* Tags List */
+  .tags-filter {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
+  }
+
+  .filter-label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-muted);
+  }
+
+  .tags-list {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .tag-chip {
+    font-size: 0.85rem;
+    padding: 0.35rem 0.85rem;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--border);
+    background-color: var(--bg-sidebar);
+    color: var(--text-secondary);
+    font-weight: 500;
+    transition: var(--transition-fast);
+    cursor: pointer;
+  }
+
+  .tag-chip:hover, .tag-chip.active {
+    border-color: var(--accent);
+    color: var(--accent);
+    background-color: var(--accent-light);
+  }
+
+  /* Posts layout */
+  .posts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    max-width: 800px;
+  }
+
+  .post-item {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    overflow: hidden;
+    transition: var(--transition);
+  }
+
+  @media (min-width: 640px) {
+    .post-item {
+      flex-direction: row;
+    }
+  }
+
+  .post-item-banner {
+    width: 100%;
+    height: 180px;
+  }
+
+  @media (min-width: 640px) {
+    .post-item-banner {
+      width: 240px;
+      height: auto;
+      min-height: 100%;
+      flex-shrink: 0;
+    }
+  }
+
+  .post-item-banner img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .post-item-details {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+
+  @media (min-width: 640px) {
+    .post-item-details {
+      padding: 2rem;
+    }
+  }
+
+  .post-item-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+  }
+
+  .divider {
+    color: var(--border);
+  }
+
+  .post-title {
+    font-size: 1.5rem;
+    margin-bottom: 0.75rem;
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-top: 0;
+  }
+
+  .post-title a {
+    color: var(--text-primary);
+  }
+
+  .post-title a:hover {
+    color: var(--accent);
+  }
+
+  .post-description {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+    flex-grow: 1;
+  }
+
+  .post-tags {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .tag-badge {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--accent);
+  }
+</style>

@@ -43,8 +43,6 @@ const allTags = [...new Set(posts.flatMap(post => post.data.tags))];
             <span class="post-date">
               {post.data.pubDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
             </span>
-            <span class="divider">•</span>
-            <span class="read-time">5 min read</span>
           </div>
           <h2 class="post-title">
             <a href={`/blog/${post.id}`}>{post.data.title}</a>

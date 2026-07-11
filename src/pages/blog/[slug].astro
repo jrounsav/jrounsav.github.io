@@ -33,8 +33,6 @@ const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
       <header class="post-header">
         <div class="post-meta">
           <time datetime={post.data.pubDate.toISOString()}>{formattedDate}</time>
-          <span class="divider">•</span>
-          <span>5 min read</span>
         </div>
         <h1 class="post-title">{post.data.title}</h1>
         

@@ -45,12 +45,19 @@ const skills = [
             <div class="timeline-marker"></div>
             <div class="timeline-content">
               <div class="timeline-header">
-                <h4>Owner</h4>
-                <span class="timeline-date">August 2011 - Present</span>
+                <h4>Founder</h4>
+                <span class="timeline-date">April 2026 - Present</span>
               </div>
-              <p class="company">Rounsavall Web Development, LLC (Freelance)</p>
+              <p class="company">
+                <a href="https://functional-audio.com" target="_blank" rel="noopener noreferrer" style="font-weight: 600;">
+                  Functional Audio
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="display: inline-block; vertical-align: middle; margin-left: 2px;"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+                </a>
+              </p>
               <ul class="cv-bullet-list">
-                <li>General web development, SEO & consultation.</li>
+                <li>Designed and layered custom multi-frequency noise profiles and soundscapes using the Reaper DAW to produce high-fidelity audio environments optimized for sleep, deep focus, and cognitive wellness.</li>
+                <li>Produced and distributed free-access therapeutic soundscapes on YouTube, driving initial audience acquisition and scaling platform visibility.</li>
+                <li>Optimized digital asset delivery and minimized resource requirements by introducing high-efficiency audio compression and real-time algorithmic generative audio models.</li>
               </ul>
             </div>
           </div>
@@ -137,6 +144,20 @@ const skills = [
               </ul>
             </div>
           </div>
+
+          <div class="timeline-item">
+            <div class="timeline-marker"></div>
+            <div class="timeline-content">
+              <div class="timeline-header">
+                <h4>Owner</h4>
+                <span class="timeline-date">August 2011 - August 2016</span>
+              </div>
+              <p class="company">Rounsavall Web Development, LLC (Freelance)</p>
+              <ul class="cv-bullet-list">
+                <li>General web development, SEO & consultation.</li>
+              </ul>
+            </div>
+          </div>
         </div>
 
         <h3 class="cv-subsection-title">Education</h3>
@@ -178,6 +199,17 @@ const skills = [
               </div>
             </div>
           ))}
+        </div>
+
+        <!-- Venture Card -->
+        <div class="card venture-card" style="margin-bottom: 2.5rem; border-color: var(--accent);">
+          <div class="venture-badge">NEW VENTURE</div>
+          <h4>Functional Audio</h4>
+          <p class="venture-desc">Creating tailored, science-backed functional audio designed to enhance sleep, deep focus, and productivity.</p>
+          <a href="https://functional-audio.com" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm">
+            Visit functional-audio.com
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-left: 4px;"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+          </a>
         </div>
 
         <div class="contact-card card">
@@ -544,5 +576,35 @@ const skills = [
     font-weight: 600;
     display: inline-flex;
     align-items: center;
+  }
+
+  /* Venture Card Styles */
+  .venture-card {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, var(--bg-card) 0%, rgba(13, 148, 136, 0.05) 100%);
+  }
+
+  .venture-badge {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    padding: 0.2rem 0.6rem;
+    background-color: var(--accent);
+    color: var(--bg-primary);
+    border-radius: var(--radius-sm);
+    margin-bottom: 0.75rem;
+  }
+
+  .venture-desc {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    margin-bottom: 1.25rem;
+  }
+
+  .btn-sm {
+    padding: 0.4rem 1rem;
+    font-size: 0.85rem;
   }
 </style>

@@ -1,16 +1,16 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
 
 :root {
-  /* Colors - Light Mode */
-  --bg-primary: #f8fafc;
+  /* Colors - Light Mode (Academic Editorial) */
+  --bg-primary: #fbfaf7;
   --bg-sidebar: #ffffff;
   --bg-card: #ffffff;
   --text-primary: #0f172a;
-  --text-secondary: #475569;
-  --text-muted: #94a3b8;
-  --accent: #0d9488;
-  --accent-hover: #0f766e;
-  --accent-light: #ccfbf1;
+  --text-secondary: #334155;
+  --text-muted: #64748b;
+  --accent: #1e3a8a;
+  --accent-hover: #172554;
+  --accent-light: #eff6ff;
   --border: #e2e8f0;
   
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
@@ -30,17 +30,17 @@
 }
 
 html[data-theme="dark"] {
-  /* Colors - Dark Mode */
-  --bg-primary: #0b0f19;
-  --bg-sidebar: #111827;
-  --bg-card: #1f2937;
-  --text-primary: #f9fafb;
-  --text-secondary: #d1d5db;
-  --text-muted: #6b7280;
-  --accent: #2dd4bf;
-  --accent-hover: #14b8a6;
-  --accent-light: #134e4a;
-  --border: #374151;
+  /* Colors - Dark Mode (Academic Editorial) */
+  --bg-primary: #0f172a;
+  --bg-sidebar: #1e293b;
+  --bg-card: #1e293b;
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #64748b;
+  --accent: #60a5fa;
+  --accent-hover: #93c5fd;
+  --accent-light: #1e3a8a;
+  --border: #334155;
   
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.5);
   --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
@@ -193,7 +193,7 @@ p {
   padding: 0.5rem 0 0.5rem 1.5rem;
   margin: 1.5rem 0;
   font-style: italic;
-  background-color: rgba(13, 148, 136, 0.05);
+  background-color: color-mix(in srgb, var(--accent) 5%, transparent);
   border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
 }
 
